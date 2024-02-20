@@ -1,0 +1,6 @@
+Add y Update de User y Group.
+Actualización de las tablas al introducir un nuevo User y Group.
+Delete de Task, User y Group.
+Pasarlo todo a ingleś.
+Insertar en el servidor todo para crear la base de datos.
+Que se cierren las ventanas al darle al close o al añadir o actualizar si están todos los campos correctos.

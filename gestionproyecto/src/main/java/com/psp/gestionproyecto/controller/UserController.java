@@ -82,8 +82,8 @@ public class UserController {
     private void loadUsersFromDB() {
         UserRepositoryImpl userRepository = new UserRepositoryImpl();
         try {
-            ArrayList<UserVO> userVOs = userRepository.load();
-            ObservableList<User> users = UserConverter.userVOToUserConverter(userVOs);
+            ArrayList<UserVO> usersVO = userRepository.load();
+            ObservableList<User> users = UserConverter.userVOToUserConverter(usersVO);
             userList.clear();
             userList.addAll(users);
         } catch (UserException e) {
@@ -110,10 +110,12 @@ public class UserController {
     @FXML
     private void handleAddUser() {
         try {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/psp/gestionproyecto/AddUser.fxml"));
             Parent root = loader.load();
 
             AddUserController controller = loader.getController();
+
             controller.setUserRepository(new UserRepositoryImpl());
 
             Scene scene = new Scene(root);
@@ -134,7 +136,34 @@ public class UserController {
 
     @FXML
     private void handleUpdateUser() {
+        User selectedUser = userTable.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/psp/gestionproyecto/UpdateUser.fxml"));
+                Parent root = loader.load();
+
+                UpdateUserController controller = loader.getController();
+                controller.initData(selectedUser);
+
+                Scene scene = new Scene(root);
+
+                Stage stage = new Stage();
+                stage.setTitle("Update User");
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+                controller.setDialogStage(stage);
+
+                stage.showAndWait();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showAlert("Error", "Please, choose an user to update.");
+        }
     }
+
 
     private void clearInput() {
         usernameInput.clear();

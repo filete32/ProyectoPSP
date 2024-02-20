@@ -74,7 +74,7 @@ public class TaskController {
             taskTable.setItems(taskList);
         }
 
-        loadDBTasks();
+        loadTasksFromDB();
 
         taskTable.setItems(taskList);
 
@@ -94,7 +94,7 @@ public class TaskController {
         });
     }
 
-    private void loadDBTasks() {
+    private void loadTasksFromDB() {
         TaskRepositoryImpl taskRepository = new TaskRepositoryImpl();
         try {
             ArrayList<TaskVO> tasks = taskRepository.load();
@@ -151,12 +151,16 @@ public class TaskController {
         Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
         if (selectedTask != null) {
             try {
+                // Obtener el nombre de usuario actual
                 String username = System.getProperty("USERNAME");
 
+                // Obtener el repositorio de usuarios
                 UserRepository userRepository = new UserRepositoryImpl();
 
+                // Obtener el usuario actual
                 UserVO currentUser = userRepository.getUserByUsername(username);
 
+                // Verificar si el usuario es administrador
                 boolean isAdmin = userRepository.isAdmin(currentUser);
 
                 if (isAdmin) {
@@ -194,6 +198,7 @@ public class TaskController {
                         taskTable.refresh();
                     }
                 } else {
+                    // Mostrar mensaje de error si el usuario no es administrador
                     showAlert("Error", "You do not have permission to update tasks.");
                 }
             } catch (IOException e) {
@@ -203,6 +208,9 @@ public class TaskController {
             }
         }
     }
+
+
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

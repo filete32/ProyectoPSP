@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class UserConverter {
 
     /**
-     * Convert a list of UserVO to a list of User.
+     * Converts a UserVO list to a User list.
      *
-     * @param list The list of UserVO to convert.
+     * @param list UserVO list to convert.
      * @return An ObservableList of User.
      */
     public static ObservableList<User> userVOToUserConverter(ArrayList<UserVO> list) {
@@ -30,12 +30,6 @@ public class UserConverter {
         return users;
     }
 
-    /**
-     * Convert a User to a UserVO.
-     *
-     * @param user The User to convert.
-     * @return The resulting UserVO.
-     */
     public static UserVO userToUserVOConverter(User user) {
         int userId = user.getUserId();
         String username = user.getUsername();

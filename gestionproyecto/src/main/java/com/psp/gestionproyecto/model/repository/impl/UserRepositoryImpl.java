@@ -11,7 +11,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final JDBCConnection connection = new JDBCConnection();
     private Statement stmt;
-    private String query;
+    private String sentence;
     private ArrayList<UserVO> list;
     private UserVO user;
 
@@ -23,13 +23,13 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             Connection conn = this.connection.connectDB();
             this.stmt = conn.createStatement();
-            this.query = "INSERT INTO usuario (nom_usuario, password, mail, admin, id_grupo) VALUES ('" + user.getUsername() + "','" + user.getPassword() + "','" + user.getEmail() + "'," + (user.isAdmin() ? 1 : 0) + "," + user.getGroupId() + ");";
-            this.stmt.executeUpdate(this.query);
+            this.sentence = "INSERT INTO usuario (nom_usuario, password, mail, admin, id_grupo) VALUES ('" + user.getUsername() + "','" + user.getPassword() + "','" + user.getEmail() + "'," + (user.isAdmin() ? 1 : 0) + "," + user.getGroupId() + ");";
+            this.stmt.executeUpdate(this.sentence);
             this.stmt.close();
             this.connection.disconnectDB(conn);
         } catch (SQLException e) {
             System.out.println(e);
-            throw new UserException("Operation could not be performed");
+            throw new UserException("Operation couldn't be made");
         }
     }
 
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
             String sql = String.format("UPDATE usuario SET nom_usuario = '%s', password = '%s', mail = '%s', admin = %d, id_grupo = %d WHERE id_usuario = %d", user.getUsername(), user.getPassword(), user.getEmail(), (user.isAdmin() ? 1 : 0), user.getGroupId(), user.getUserId());
             this.stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new UserException("Edition could not be performed");
+            throw new UserException("Edit couldn't be made");
         }
     }
 
@@ -63,10 +63,10 @@ public class UserRepositoryImpl implements UserRepository {
                 }
                 return isAdmin;
             } else {
-                throw new UserException("The user is null");
+                throw new UserException("User is null");
             }
         } catch (SQLException e) {
-            throw new UserException("Error verifying administrator privileges: " + e.getMessage());
+            throw new UserException("Error verifying admin permits: " + e.getMessage());
         } finally {
             try {
                 if (rs != null) {
@@ -85,28 +85,30 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
 
+
+
     @Override
     public ArrayList<UserVO> load() throws UserException {
         try {
             Connection conn = this.connection.connectDB();
             this.list = new ArrayList<>();
             this.stmt = conn.createStatement();
-            this.query = "SELECT * FROM usuario";
-            ResultSet rs = this.stmt.executeQuery(this.query);
+            this.sentence = "SELECT * FROM usuario";
+            ResultSet rs = this.stmt.executeQuery(this.sentence);
             while (rs.next()) {
-                int idUser = rs.getInt("id_usuario");
-                String username = rs.getString("nom_usuario");
-                String password = rs.getString("password");
-                String email = rs.getString("mail");
+                int userId = rs.getInt("id_usuario");
+                String userName = rs.getString("nom_usuario");
+                String userPassword = rs.getString("password");
+                String userMail = rs.getString("mail");
                 boolean isAdmin = rs.getBoolean("admin");
-                int idGroup = rs.getInt("id_grupo");
-                this.user = new UserVO(idUser, username, password, email, isAdmin, idGroup);
+                int groupId = rs.getInt("id_grupo");
+                this.user = new UserVO(userId, userName, userPassword, userMail, isAdmin, groupId);
                 this.list.add(this.user);
             }
             this.connection.disconnectDB(conn);
             return this.list;
         } catch (SQLException e) {
-            throw new UserException("Operation could not be performed");
+            throw new UserException("Operation couldn't be made");
         }
     }
 
@@ -115,14 +117,14 @@ public class UserRepositoryImpl implements UserRepository {
         int id = 0;
         try {
             Connection conn = this.connection.connectDB();
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id_usuario FROM usuario ORDER BY id_usuario DESC LIMIT 1");
-            while (resultSet.next()) {
-                id = resultSet.getInt("id_usuario");
+            Statement comando = conn.createStatement();
+            ResultSet registro = comando.executeQuery("SELECT id_usuario FROM usuario ORDER BY id_usuario DESC LIMIT 1");
+            while (registro.next()) {
+                id = registro.getInt("id_usuario");
             }
             return id;
         } catch (SQLException e) {
-            throw new UserException("ID search could not be performed");
+            throw new UserException("ID search couldn't be made");
         }
     }
 
@@ -139,16 +141,16 @@ public class UserRepositoryImpl implements UserRepository {
             stmt.setString(1, username);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                int idUser = rs.getInt("id_usuario");
-                String name = rs.getString("nom_usuario");
-                String password = rs.getString("password");
-                String email = rs.getString("mail");
+                int userId = rs.getInt("id_usuario");
+                String userName = rs.getString("nom_usuario");
+                String userPassword = rs.getString("password");
+                String userMail = rs.getString("mail");
                 boolean isAdmin = rs.getBoolean("admin");
-                int idGroup = rs.getInt("id_grupo");
-                user = new UserVO(idUser, name, password, email, isAdmin, idGroup);
+                int groupId = rs.getInt("id_grupo");
+                user = new UserVO(userId, userName, userPassword, userMail, isAdmin, groupId);
             }
         } catch (SQLException e) {
-            throw new UserException("Error getting user by username: " + e.getMessage());
+            throw new UserException("Error obtaining user by username: " + e.getMessage());
         } finally {
             try {
                 if (rs != null) {

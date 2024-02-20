@@ -14,7 +14,7 @@ public class GroupRepositoryImpl implements GroupRepository {
 
     private final JDBCConnection connection = new JDBCConnection();
     private Statement stmt;
-    private String query;
+    private String sentence;
     private ArrayList<GroupVO> list;
     private GroupVO group;
 
@@ -26,13 +26,13 @@ public class GroupRepositoryImpl implements GroupRepository {
         try {
             Connection conn = this.connection.connectDB();
             this.stmt = conn.createStatement();
-            this.query = "INSERT INTO group (nombre, descripcion) VALUES ('" + group.getGroup_name() + "','" + group.getGroup_description() + "');";
-            this.stmt.executeUpdate(this.query);
+            this.sentence = "INSERT INTO grupo (nombre, descripcion) VALUES ('" + group.getGroup_name() + "','" + group.getGroup_description() + "');";
+            this.stmt.executeUpdate(this.sentence);
             this.stmt.close();
             this.connection.disconnectDB(conn);
         } catch (SQLException e) {
             System.out.println(e);
-            throw new GroupException("Operation could not be performed");
+            throw new GroupException("Operation couldn't be made");
         }
     }
 
@@ -41,10 +41,10 @@ public class GroupRepositoryImpl implements GroupRepository {
         try {
             Connection conn = this.connection.connectDB();
             this.stmt = conn.createStatement();
-            String sql = String.format("UPDATE group SET nombre = '%s', descripcion = '%s' WHERE id_grupo = %d", group.getGroup_name(), group.getGroup_description(), group.getId_group());
+            String sql = String.format("UPDATE grupo SET nombre = '%s', descripcion = '%s' WHERE id_grupo = %d", group.getGroup_name(), group.getGroup_description(), group.getId_group());
             this.stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new GroupException("Edition could not be performed");
+            throw new GroupException("Couldn't edit");
         }
     }
 
@@ -54,19 +54,19 @@ public class GroupRepositoryImpl implements GroupRepository {
             Connection conn = this.connection.connectDB();
             this.list = new ArrayList<>();
             this.stmt = conn.createStatement();
-            this.query = "SELECT * FROM group";
-            ResultSet rs = this.stmt.executeQuery(this.query);
+            this.sentence = "SELECT * FROM grupo";
+            ResultSet rs = this.stmt.executeQuery(this.sentence);
             while (rs.next()) {
-                int idGroup = rs.getInt("id_grupo");
+                int groupId = rs.getInt("id_grupo");
                 String groupName = rs.getString("nombre");
                 String groupDescription = rs.getString("descripcion");
-                this.group = new GroupVO(idGroup, groupName, groupDescription);
+                this.group = new GroupVO(groupId, groupName, groupDescription);
                 this.list.add(this.group);
             }
             this.connection.disconnectDB(conn);
             return this.list;
         } catch (SQLException e) {
-            throw new GroupException("Operation could not be performed");
+            throw new GroupException("Operation couldn't be made");
         }
     }
 
@@ -75,14 +75,14 @@ public class GroupRepositoryImpl implements GroupRepository {
         int id = 0;
         try {
             Connection conn = this.connection.connectDB();
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id_grupo FROM group ORDER BY id_grupo DESC LIMIT 1");
-            while (resultSet.next()) {
-                id = resultSet.getInt("id_grupo");
+            Statement comando = conn.createStatement();
+            ResultSet registro = comando.executeQuery("SELECT id_grupo FROM grupo ORDER BY id_grupo DESC LIMIT 1");
+            while (registro.next()) {
+                id = registro.getInt("id_grupo");
             }
             return id;
         } catch (SQLException e) {
-            throw new GroupException("ID search could not be performed");
+            throw new GroupException("ID search could not be made");
         }
     }
 }

@@ -4,7 +4,6 @@ import com.psp.gestionproyecto.model.Group;
 import com.psp.gestionproyecto.model.GroupVO;
 import com.psp.gestionproyecto.model.repository.impl.GroupRepositoryImpl;
 import com.psp.gestionproyecto.model.GroupException;
-import com.psp.gestionproyecto.util.GroupConverter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -53,7 +52,7 @@ public class GroupController {
         groupTable.setItems(groupList);
         groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        loadGroupsFromDB();
+        loadGroupFromDB();
         groupTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Group>() {
             @Override
             public void changed(ObservableValue<? extends Group> observable, Group oldValue, Group newValue) {
@@ -70,11 +69,13 @@ public class GroupController {
         groupDescriptionLabel.setText(group.getGroup_description());
     }
 
-    private void loadGroupsFromDB() {
+
+
+    private void loadGroupFromDB() {
         GroupRepositoryImpl groupRepository = new GroupRepositoryImpl();
         try {
-            ArrayList<GroupVO> groupVOs = groupRepository.load();
-            for (GroupVO groupVO : groupVOs) {
+            ArrayList<GroupVO> groupsVO = groupRepository.load();
+            for (GroupVO groupVO : groupsVO) {
                 Group group = new Group(groupVO.getId_group(), groupVO.getGroup_name(), groupVO.getGroup_description());
                 groupList.add(group);
             }
@@ -82,6 +83,7 @@ public class GroupController {
             showAlert("Error loading groups", e.getMessage());
         }
     }
+
 
     @FXML
     private void handleAddGroup() {

@@ -1,16 +1,16 @@
 package com.psp.gestionproyecto.model;
 
 public class UserException extends Exception {
-    private String message;
+    private String mensaje;
 
     public UserException() {
     }
 
-    public UserException(String message) {
-        this.message = message;
+    public UserException(String mensaje) {
+        this.mensaje = mensaje;
     }
 
-    public String printMessage() {
-        return this.message;
+    public String imprimirMensaje() {
+        return this.mensaje;
     }
 }

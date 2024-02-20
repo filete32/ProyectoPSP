@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class GroupConverter {
 
     /**
-     * Convert a list of GroupVO to a list of Group.
+     * Converts a GroupVO list to a Group list.
      *
-     * @param list The list of GroupVO to convert.
+     * @param list GroupVO list to convert.
      * @return An ObservableList of Group.
      */
     public static ObservableList<Group> groupVOToGroupConverter(ArrayList<GroupVO> list) {
@@ -28,7 +28,7 @@ public class GroupConverter {
     }
 
     /**
-     * Convert a Group to a GroupVO.
+     * Converts a Group to a GroupVO.
      *
      * @param group The Group to convert.
      * @return The resulting GroupVO.

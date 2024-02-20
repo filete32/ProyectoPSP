@@ -10,12 +10,12 @@ public class JDBCConnection {
 
     public Connection connectDB() throws SQLException {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/gestionproyectos?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "userdjbc");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/gestionproyectos?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "");
             Class.forName("com.mysql.cj.jdbc.Driver");
             return conn;
         } catch (SQLException var2) {
             SQLException ex = var2;
-            System.out.println("\n--- Captured SQLException ---\n");
+            System.out.println("\n--- SQLException capturada ---\n");
 
             while(ex != null) {
                 System.out.println("Message:   " + ex.getMessage());
@@ -36,7 +36,7 @@ public class JDBCConnection {
             conn.close();
         } catch (SQLException var3) {
             SQLException ex = var3;
-            System.out.println("\n--- Captured SQLException ---\n");
+            System.out.println("\n--- SQLException capturada ---\n");
 
             while(ex != null) {
                 System.out.println("Message:   " + ex.getMessage());

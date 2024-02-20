@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface UserRepository {
     /**
-     * Save a new user.
+     * Saves a new user.
      *
      * @param user The user to save.
      * @throws UserException If an error occurs while saving the user.
@@ -15,7 +15,7 @@ public interface UserRepository {
     void save(UserVO user) throws UserException;
 
     /**
-     * Update the information of an existing user.
+     * Updates the information of an existing user.
      *
      * @param user The user to update.
      * @throws UserException If an error occurs while updating the user.
@@ -23,7 +23,7 @@ public interface UserRepository {
     void update(UserVO user) throws UserException;
 
     /**
-     * Check if a user has administrator privileges.
+     * Checks if a user has administrator privileges.
      *
      * @param user The user to check.
      * @return true if the user is an administrator, false otherwise.
@@ -32,27 +32,28 @@ public interface UserRepository {
     boolean isAdmin(UserVO user) throws UserException;
 
     /**
-     * Load all stored users.
+     * Loads all stored users.
      *
      * @return A list of all stored users.
-     * @throws UserException If an error occurs while loading the users.
+     * @throws UserException If an error occurs while loading users.
      */
     ArrayList<UserVO> load() throws UserException;
 
     /**
-     * Get the last used user ID.
+     * Gets the last used user ID.
      *
      * @return The last used user ID.
-     * @throws UserException If an error occurs while getting the last user ID.
+     * @throws UserException If an error occurs when getting the last user ID.
      */
+
     int lastId() throws UserException;
 
     /**
-     * Get a user by their username.
+     * Obtains user by username.
      *
-     * @param username The username to search for.
-     * @return The UserVO object corresponding to the provided username.
-     * @throws UserException If an error occurs while searching for the user.
+     * @param username user to search.
+     * @return UserVO object corresponding to the username.
+     * @throws UserException If error occurs obtaining user.
      */
     UserVO getUserByUsername(String username) throws UserException;
 }

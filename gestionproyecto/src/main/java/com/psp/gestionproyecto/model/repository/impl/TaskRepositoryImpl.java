@@ -15,7 +15,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     private final JDBCConnection connection = new JDBCConnection();
     private Statement stmt;
-    private String query;
+    private String sentence;
     private ArrayList<TaskVO> list;
     private TaskVO task;
 
@@ -23,17 +23,17 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public void save(TaskVO task) throws TaskException {
+    public void save(TaskVO tarea) throws TaskException {
         try {
             Connection conn = this.connection.connectDB();
             this.stmt = conn.createStatement();
-            this.query = "INSERT INTO task (nom_tarea, fecha_creacion, fecha_entrega, id_grupo) VALUES ('" + task.getTaskName() + "', CURDATE(), '" + task.getDueDate() + "', " + task.getGroupId() + ");";
-            this.stmt.executeUpdate(this.query);
+            this.sentence = "INSERT INTO tarea (nom_tarea, fecha_creacion, fecha_entrega, id_grupo) VALUES ('" + tarea.getTaskName() + "', CURDATE(), '" + tarea.getDueDate() + "', " + tarea.getGroupId() + ");";
+            this.stmt.executeUpdate(this.sentence);
             this.stmt.close();
             this.connection.disconnectDB(conn);
         } catch (SQLException e) {
             System.out.println(e);
-            throw new TaskException("Operation could not be performed");
+            throw new TaskException("Operation couldn't be made");
         }
     }
 
@@ -43,10 +43,10 @@ public class TaskRepositoryImpl implements TaskRepository {
         try {
             Connection conn = this.connection.connectDB();
             this.stmt = conn.createStatement();
-            String sql = String.format("UPDATE task SET nom_tarea = '%s', fecha_creacion = '%s', fecha_entrega = '%s', id_grupo = %d WHERE id_tarea = %d", task.getTaskName(), task.getCreationDate(), task.getDueDate(), task.getGroupId(), task.getTaskId());
+            String sql = String.format("UPDATE tarea SET nom_tarea = '%s', fecha_creacion = '%s', fecha_entrega = '%s', id_grupo = %d WHERE id_tarea = %d", task.getTaskName(), task.getCreationDate(), task.getDueDate(), task.getGroupId(), task.getTaskId());
             this.stmt.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new TaskException("Edition could not be performed");
+            throw new TaskException("Edit couldn't be made");
         }
     }
 
@@ -56,21 +56,21 @@ public class TaskRepositoryImpl implements TaskRepository {
             Connection conn = this.connection.connectDB();
             this.list = new ArrayList<>();
             this.stmt = conn.createStatement();
-            this.query = "SELECT * FROM task";
-            ResultSet rs = this.stmt.executeQuery(this.query);
+            this.sentence = "SELECT * FROM tarea";
+            ResultSet rs = this.stmt.executeQuery(this.sentence);
             while (rs.next()) {
-                int idTask = rs.getInt("id_tarea");
+                int taskId = rs.getInt("id_tarea");
                 String taskName = rs.getString("nom_tarea");
-                String creationDate = rs.getString("fecha_creacion");
+                String createDate = rs.getString("fecha_creacion");
                 String dueDate = rs.getString("fecha_entrega");
-                int idGroup = rs.getInt("id_grupo");
-                this.task = new TaskVO(idTask, taskName, LocalDate.parse(creationDate), LocalDate.parse(dueDate), idGroup);
+                int groupdId = rs.getInt("id_grupo");
+                this.task = new TaskVO(taskId, taskName, LocalDate.parse(createDate), LocalDate.parse(dueDate), groupdId);
                 this.list.add(this.task);
             }
             this.connection.disconnectDB(conn);
             return this.list;
         } catch (SQLException e) {
-            throw new TaskException("Operation could not be performed");
+            throw new TaskException("Operation couldn't be made");
         }
     }
 
@@ -79,14 +79,14 @@ public class TaskRepositoryImpl implements TaskRepository {
         int id = 0;
         try {
             Connection conn = this.connection.connectDB();
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id_tarea FROM task ORDER BY id_tarea DESC LIMIT 1");
-            while (resultSet.next()) {
-                id = resultSet.getInt("id_tarea");
+            Statement command = conn.createStatement();
+            ResultSet rs = command.executeQuery("SELECT id_tarea FROM tarea ORDER BY id_tarea DESC LIMIT 1");
+            while (rs.next()) {
+                id = rs.getInt("id_tarea");
             }
             return id;
         } catch (SQLException e) {
-            throw new TaskException("ID search could not be performed");
+            throw new TaskException("ID search couldn't be made");
         }
     }
 }

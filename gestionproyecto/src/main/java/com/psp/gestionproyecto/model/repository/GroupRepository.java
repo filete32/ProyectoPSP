@@ -7,34 +7,34 @@ import java.util.ArrayList;
 
 public interface GroupRepository {
     /**
-     * Save a new group.
+     * Stores new group.
      *
-     * @param group The group to save.
-     * @throws GroupException If an error occurs while saving the group.
+     * @param group group to save.
+     * @throws GroupException if error happens storing group.
      */
     void save(GroupVO group) throws GroupException;
 
     /**
-     * Update the information of an existing group.
+     * Updates existing group info.
      *
-     * @param group The group to update.
-     * @throws GroupException If an error occurs while updating the group.
+     * @param group group to update.
+     * @throws GroupException if error happens updating group.
      */
     void update(GroupVO group) throws GroupException;
 
     /**
-     * Load all stored groups.
+     * Loads all stored groups.
      *
-     * @return A list of all stored groups.
-     * @throws GroupException If an error occurs while loading the groups.
+     * @return list with all groups.
+     * @throws GroupException if error happens loading groups.
      */
     ArrayList<GroupVO> load() throws GroupException;
 
     /**
-     * Get the last used group ID.
+     * Obtains last id from used group.
      *
-     * @return The last used group ID.
-     * @throws GroupException If an error occurs while getting the last group ID.
+     * @return last id from used group.
+     * @throws GroupException if error happens obtaining last id.
      */
     int lastId() throws GroupException;
 }

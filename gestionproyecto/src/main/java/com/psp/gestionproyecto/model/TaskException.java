@@ -1,16 +1,16 @@
 package com.psp.gestionproyecto.model;
 
 public class TaskException extends Exception {
-    private String message;
+    private String mensaje;
 
     public TaskException() {
     }
 
-    public TaskException(String message) {
-        this.message = message;
+    public TaskException(String mensaje) {
+        this.mensaje = mensaje;
     }
 
-    public String printMessage() {
-        return this.message;
+    public String imprimirMensaje() {
+        return this.mensaje;
     }
 }

@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class TaskConverter {
 
     /**
-     * Convert a list of TaskVO to a list of Task.
+     * Converts a TaskVO list to a Task list.
      *
-     * @param list The list of TaskVO to convert.
+     * @param list List of TaskVO to convert.
      * @return An ObservableList of Task.
      */
     public static ObservableList<Task> taskVOToTaskConverter(ArrayList<TaskVO> list) {

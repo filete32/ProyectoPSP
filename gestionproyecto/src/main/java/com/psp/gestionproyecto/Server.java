@@ -9,6 +9,7 @@ public class Server {
     private static Connection connection;
 
     public static void main(String[] args) {
+
         establishDBConnection();
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -18,18 +19,20 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected from " + clientSocket.getInetAddress());
 
+                // Crear un nuevo hilo para manejar al cliente
                 Thread clientThread = new ClientHandler(clientSocket);
                 clientThread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            // Cerrar la conexión a la base de datos al finalizar
             closeDBConnection();
         }
     }
 
     private static void establishDBConnection() {
-        String jdbcUrl = "jdbc:mysql://localhost/gestionproyectos?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&user=root&password=userdjbc";
+        String jdbcUrl = "jdbc:mysql://localhost/gestionproyectos?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&user=root&password=";
 
         try {
             connection = DriverManager.getConnection(jdbcUrl);
@@ -37,7 +40,7 @@ public class Server {
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("Failed to connect to database: " + e.getMessage());
-            // Es importante manejar adecuadamente la excepción o lanzarla nuevamente si es necesario
+
         }
     }
 

@@ -50,6 +50,7 @@ public class AddUserController {
                 dialogStage.close();
             } catch (UserException e) {
                 e.printStackTrace();
+
             }
         }
     }

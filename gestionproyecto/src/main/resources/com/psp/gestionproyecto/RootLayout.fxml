@@ -24,6 +24,15 @@
                         <MenuItem mnemonicParsing="false" text="View Groups" onAction="#handleViewGroups"/>
                     </items>
                 </Menu>
+                <Menu mnemonicParsing="false" text="Chat Menu">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Start Chat Server" onAction="#handleStartChatServer"/>
+                        <MenuItem mnemonicParsing="false" text="Open Chat" onAction="#handleOpenChat"/>
+                        <MenuItem mnemonicParsing="false" text="Help" onAction="#handleHelp"/>
+
+                    </items>
+                </Menu>
+
             </menus>
         </MenuBar>
     </top>

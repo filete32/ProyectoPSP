@@ -8,10 +8,13 @@ import javafx.collections.ObservableList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * The TaskConverter class provides utility methods to convert between Task and TaskVO objects.
+ */
 public class TaskConverter {
 
     /**
-     * Converts a TaskVO list to a Task list.
+     * Converts a list of TaskVO objects to a list of Task objects.
      *
      * @param list List of TaskVO to convert.
      * @return An ObservableList of Task.
@@ -31,7 +34,7 @@ public class TaskConverter {
     }
 
     /**
-     * Convert a Task to a TaskVO.
+     * Converts a Task object to a TaskVO object.
      *
      * @param task The Task to convert.
      * @return The resulting TaskVO.
@@ -43,5 +46,20 @@ public class TaskConverter {
         LocalDate dueDate = task.getDueDate();
         int groupId = task.getGroupId();
         return new TaskVO(taskId, taskName, creationDate, dueDate, groupId);
+    }
+
+    /**
+     * Converts a TaskVO object to a Task object.
+     *
+     * @param taskVO The TaskVO to convert.
+     * @return The resulting Task.
+     */
+    public static Task taskVoToTaskConverter(TaskVO taskVO) {
+        int taskId = taskVO.getTaskId();
+        String taskName = taskVO.getTaskName();
+        LocalDate creationDate = taskVO.getCreationDate();
+        LocalDate dueDate = taskVO.getDueDate();
+        int groupId = taskVO.getGroupId();
+        return new Task(taskId, taskName, creationDate, dueDate, groupId);
     }
 }

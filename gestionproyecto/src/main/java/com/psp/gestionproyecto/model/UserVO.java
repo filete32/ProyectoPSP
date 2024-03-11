@@ -1,7 +1,14 @@
 package com.psp.gestionproyecto.model;
 
-public class UserVO {
+import java.io.Serializable;
 
+/**
+ * The UserVO class represents a User Value Object (VO) used for data transfer.
+ * It implements Serializable to support serialization.
+ */
+public class UserVO implements Serializable {
+
+    // Fields representing user attributes
     private int userId;
     private String username;
     private String password;
@@ -9,9 +16,24 @@ public class UserVO {
     private boolean isAdmin;
     private int groupId;
 
+    /**
+     * Default constructor for the UserVO class.
+     * Initializes all fields to default values.
+     */
     public UserVO() {
     }
 
+    /**
+     * Parameterized constructor for the UserVO class.
+     * Initializes all fields with the specified values.
+     *
+     * @param userId    The user's ID.
+     * @param username  The user's username.
+     * @param password  The user's password.
+     * @param email     The user's email address.
+     * @param isAdmin   A boolean indicating if the user is an admin.
+     * @param groupId   The ID of the group to which the user belongs.
+     */
     public UserVO(int userId, String username, String password, String email, boolean isAdmin, int groupId) {
         this.userId = userId;
         this.username = username;
@@ -20,6 +42,8 @@ public class UserVO {
         this.isAdmin = isAdmin;
         this.groupId = groupId;
     }
+
+    // Getter and setter methods for all fields
 
     public int getUserId() {
         return userId;
@@ -60,7 +84,6 @@ public class UserVO {
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-
 
     public int getGroupId() {
         return groupId;

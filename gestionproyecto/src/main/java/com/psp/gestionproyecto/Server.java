@@ -1,53 +1,77 @@
 package com.psp.gestionproyecto;
 
+import com.psp.gestionproyecto.model.TaskException;
+import com.psp.gestionproyecto.model.TaskVO;
+import com.psp.gestionproyecto.model.UserException;
+import com.psp.gestionproyecto.model.UserVO;
+import com.psp.gestionproyecto.model.repository.TaskRepository;
+import com.psp.gestionproyecto.model.repository.UserRepository;
+import com.psp.gestionproyecto.model.repository.impl.TaskRepositoryImpl;
+import com.psp.gestionproyecto.model.repository.impl.UserRepositoryImpl;
+
 import java.io.*;
 import java.net.*;
 import java.sql.*;
+import java.util.ArrayList;
 
+/**
+ * The Server class represents the main server that handles client connections.
+ */
 public class Server {
     private static final int PORT = 12345;
     private static Connection connection;
 
+    /**
+     * The main method that starts the server.
+     *
+     * @param args The command line arguments.
+     */
     public static void main(String[] args) {
-
-        establishDBConnection();
+        establishDBConnection(); // Establish database connection
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server started. Waiting for connections...");
 
+            // Continuously accept client connections
             while (true) {
-                Socket clientSocket = serverSocket.accept();
+                Socket clientSocket = serverSocket.accept(); // Accept incoming client connection
                 System.out.println("Client connected from " + clientSocket.getInetAddress());
 
-                // Crear un nuevo hilo para manejar al cliente
-                Thread clientThread = new ClientHandler(clientSocket);
-                clientThread.start();
+                // Create a new ClientHandler thread to handle the client connection
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clientHandler.setConnection(connection); // Pass the database connection to the client handler
+                Thread clientThread = new Thread(clientHandler);
+                clientThread.start(); // Start the client handler thread
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // Cerrar la conexión a la base de datos al finalizar
-            closeDBConnection();
+            closeDBConnection(); // Close database connection when server stops
         }
     }
 
+    /**
+     * Establishes the connection to the database.
+     */
     private static void establishDBConnection() {
         String jdbcUrl = "jdbc:mysql://localhost/gestionproyectos?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&user=root&password=";
 
         try {
-            connection = DriverManager.getConnection(jdbcUrl);
+            connection = DriverManager.getConnection(jdbcUrl); // Create connection to the database
             System.out.println("Database connection established.");
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("Failed to connect to database: " + e.getMessage());
-
         }
     }
 
+    /**
+     * Closes the connection to the database.
+     */
     private static void closeDBConnection() {
         if (connection != null) {
             try {
-                connection.close();
+                connection.close(); // Close the database connection
                 System.out.println("Database connection closed.");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -55,52 +79,4 @@ public class Server {
             }
         }
     }
-
-    private static class ClientHandler extends Thread {
-        private Socket clientSocket;
-        private BufferedReader in;
-        private PrintWriter out;
-
-        public ClientHandler(Socket socket) {
-            this.clientSocket = socket;
-            try {
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void run() {
-            try {
-
-                String username = in.readLine();
-                String password = in.readLine();
-
-                boolean loggedIn = checkCredentials(username, password);
-
-                out.println(loggedIn ? "VALID" : "FAILURE");
-
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private boolean checkCredentials(String username, String password) {
-
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM usuario WHERE nom_usuario = ? AND password = ?")) {
-                statement.setString(1, username);
-                statement.setString(2, password);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-    }
-
 }

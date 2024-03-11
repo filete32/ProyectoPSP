@@ -1,70 +1,109 @@
 package com.psp.gestionproyecto.controller;
 
+import com.psp.gestionproyecto.Client;
+import com.psp.gestionproyecto.model.User;
 import com.psp.gestionproyecto.model.UserVO;
-import com.psp.gestionproyecto.model.UserException;
-import com.psp.gestionproyecto.model.repository.impl.UserRepositoryImpl;
+import com.psp.gestionproyecto.util.UserConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * The AddUserController class controls the logic for adding a new user.
+ */
 public class AddUserController {
 
     @FXML
-    private TextField usernameInput;
+    private TextField usernameInput; // Input field for username
     @FXML
-    private TextField passwordInput;
+    private TextField passwordInput; // Input field for password
     @FXML
-    private TextField emailInput;
+    private TextField emailInput; // Input field for email
     @FXML
-    private TextField groupIdInput;
+    private TextField groupIdInput; // Input field for group ID
 
-    private UserRepositoryImpl userRepository;
+    private Stage dialogStage; // Stage for the dialog window
 
-    private Stage dialogStage;
+    private boolean userAdded = false; // Flag to indicate if a user has been added successfully
 
-    private boolean userAdded = false;
+    private Client client; // Client instance for communication with the server
 
+    private UserVO newUser; // Newly created user object
+
+    /**
+     * Sets the dialog stage for this controller.
+     *
+     * @param dialogStage The dialog stage.
+     */
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
 
+    /**
+     * Checks if a user has been added successfully.
+     *
+     * @return true if a user has been added, otherwise false.
+     */
     public boolean isUserAdded() {
         return userAdded;
     }
 
+    /**
+     * Sets the client instance.
+     *
+     * @param client The client instance to set.
+     */
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    /**
+     * Handles the event when the "Add User" button is clicked.
+     */
     @FXML
     private void handleAddUser() {
         if (inputIsValid()) {
-            UserVO newUser = new UserVO(
-                    0,
-                    usernameInput.getText(),
-                    passwordInput.getText(),
-                    emailInput.getText(),
-                    false,
-                    Integer.parseInt(groupIdInput.getText())
+            // Create a new UserVO object with the input data
+            newUser = new UserVO(
+                    0, // ID is set to 0 as it will be assigned by the server
+                    usernameInput.getText(), // Get username from input field
+                    passwordInput.getText(), // Get password from input field
+                    emailInput.getText(), // Get email from input field
+                    false, // Set isAdmin to false for new users
+                    Integer.parseInt(groupIdInput.getText()) // Parse group ID from input field
             );
 
-            try {
-                userRepository.save(newUser);
-                userAdded = true;
-                dialogStage.close();
-            } catch (UserException e) {
-                e.printStackTrace();
-
-            }
+            // Send the new user to the server to be saved
+            client.saveUser(newUser);
+            userAdded = true; // Set the flag to true indicating successful addition
+            dialogStage.close(); // Close the dialog window
         }
     }
 
+    /**
+     * Handles the event when the "Cancel" button is clicked.
+     */
     @FXML
     private void handleCancelUser() {
-        dialogStage.close();
+        dialogStage.close(); // Close the dialog stage without adding a user
     }
 
+    /**
+     * Validates the input data.
+     *
+     * @return true if the input is valid, otherwise false.
+     */
     private boolean inputIsValid() {
-        return true;
+        return true; // Currently no validation, always return true
     }
 
-    public void setUserRepository(UserRepositoryImpl userRepository) {
-        this.userRepository = userRepository;
+
+    /**
+     * Converts the newly added user to a User object.
+     *
+     * @return The added user as a User object.
+     */
+    public User getAddedUser() {
+        return UserConverter.userVOTOUserConverter(newUser);
     }
 }

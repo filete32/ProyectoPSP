@@ -27,6 +27,13 @@ public class GroupConverter {
         return groups;
     }
 
+    public static Group groupVOToGroupConverter(GroupVO groupVO){
+        int id_group = groupVO.getId_group();
+        String groupName = groupVO.getGroup_name();
+        String groupDesc = groupVO.getGroup_description();
+        return new Group(id_group, groupName, groupDesc);
+    }
+
     /**
      * Converts a Group to a GroupVO.
      *
